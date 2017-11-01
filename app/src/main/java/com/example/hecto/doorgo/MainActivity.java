@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,12 +17,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.hecto.doorgo.Class.User;
+import com.example.hecto.doorgo.Profile.ProfileUserAdmin;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.hecto.doorgo.Profile.ProfileUserAdmin;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -284,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Loggin de Cuenta
     class LoginUser extends AsyncTask<String, String, String>{
         ProgressDialog pd = new ProgressDialog(MainActivity.this);
         String userName, pass;
@@ -326,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
             }
             if(encontroUsuario>0){
                     if (userLogeado.getPass().equals(edtPass.getText().toString())){
-                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
+                        /*AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
                         builder3.setTitle("Usuario Logeado")
                                 .setNeutralButton("Aceptar",
                                         new DialogInterface.OnClickListener() {
@@ -335,7 +342,9 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         });
                         AlertDialog alert = builder3.create();
-                        alert.show();
+                        alert.show();*/
+                        saltoActivity();
+
                     }else {
                         edtPass.setError("Contraseña incorrecta");
                         edtPass.requestFocus();
@@ -346,6 +355,12 @@ public class MainActivity extends AppCompatActivity {
             }
             pd.dismiss();
         }
+    }
+
+    public void saltoActivity(){
+        Intent intent = new Intent(this, ProfileUserAdmin.class);
+        intent.putExtra("usuario", userLogeado.getUsername());
+        startActivity(intent);
     }
 }
 
