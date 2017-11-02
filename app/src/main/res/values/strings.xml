@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">DoorGo</string>
     <string name="title_activity_profile_user_admin">ProfileUserAdmin</string>
+    <string name="title_home">Perfil</string>
+    <string name="title_dashboard">Usuarios</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
