@@ -4,4 +4,5 @@
     <string name="title_home">Perfil</string>
     <string name="title_dashboard">Usuarios</string>
     <string name="title_notifications">Notifications</string>
+    <string name="section_format">Esta es la seccion numero : %1$d</string>
 </resources>

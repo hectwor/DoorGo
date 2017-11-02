@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         btnAdd = (Button)findViewById(R.id.btnAdd);
         btnLogin = (Button)findViewById(R.id.btnLogin);
         //btnEdit = (Button)findViewById(R.id.btnEdit);
-        btnDelete = (Button)findViewById(R.id.btnDelete);
+        
         edtUser = (EditText)findViewById(R.id.edtUsername);
         edtPass = (EditText)findViewById(R.id.edtPass);
 
@@ -65,44 +65,66 @@ public class MainActivity extends AppCompatActivity {
                         if(encontroUsuario>0){
                             edtUser.setError("Usuario ya registrado");
                             edtUser.requestFocus();
-                        }else
-                            new PostData(edtUser.getText().toString(), edtPass.getText().toString())
-                                    .execute(Common.getAddressAPI());
+                        }else{
+                            if (isOnlineNet()){
+                                new PostData(edtUser.getText().toString(), edtPass.getText().toString())
+                                        .execute(Common.getAddressAPI());
+                            }else{
+                                AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
+                                builder3.setTitle("Necesita Conexion a Internet")
+                                        .setMessage("No se encontró señal de internet")
+                                        .setNeutralButton("Aceptar",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                AlertDialog alert = builder3.create();
+                                alert.show();
+                            }
+                        }
+
                     }
                 }
             }
         });
-        //Evento de boton editar
-        /*btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new PutData(edtUser.getText().toString()).execute(Common.getAddressSingle(userSelected));
-            }
-        });*/
 
-        //Evento de boton eliminar
+        /*//Evento de boton eliminar
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DeleteData(userSelected).execute(Common.getAddressSingle(userSelected));
             }
-        });
+        });*/
         //Evento de boton login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ("".equals(edtUser.getText().toString())){
-                    edtUser.setError("Usuario en blanco");
-                    edtUser.requestFocus();
+                if (isOnlineNet()){
+                    if ("".equals(edtUser.getText().toString())){
+                        edtUser.setError("Usuario en blanco");
+                        edtUser.requestFocus();
+                    }else{
+                        if ("".equals(edtPass.getText().toString())){
+                            edtPass.setError("Contraseña en blanco");
+                            edtPass.requestFocus();
+                        }else
+                            new LoginUser(edtUser.getText().toString(), edtPass.getText().toString())
+                                    .execute(Common.getAddressAPI());
+                    }
                 }else{
-                    if ("".equals(edtPass.getText().toString())){
-                        edtPass.setError("Contraseña en blanco");
-                        edtPass.requestFocus();
-                    }else
-                        new LoginUser(edtUser.getText().toString(), edtPass.getText().toString())
-                                .execute(Common.getAddressAPI());
+                    AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
+                    builder3.setTitle("Necesita Conexion a Internet")
+                            .setMessage("No se encontró señal de internet")
+                            .setNeutralButton("Aceptar",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder3.create();
+                    alert.show();
                 }
-
             }
         });
     }
@@ -270,16 +292,6 @@ public class MainActivity extends AppCompatActivity {
             }
             if(encontroUsuario>0){
                     if (userLogeado.getPass().equals(edtPass.getText().toString())){
-                        /*AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
-                        builder3.setTitle("Usuario Logeado")
-                                .setNeutralButton("Aceptar",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.cancel();
-                                            }
-                                        });
-                        AlertDialog alert = builder3.create();
-                        alert.show();*/
                         saltoActivity();
 
                     }else {
@@ -298,6 +310,21 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ProfileUserAdmin.class);
         intent.putExtra("usuario", userLogeado.getUsername());
         startActivity(intent);
+    }
+    public Boolean isOnlineNet() {
+
+        try {
+            Process p = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.es");
+
+            int val           = p.waitFor();
+            boolean reachable = (val == 0);
+            return reachable;
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
     }
 }
 
