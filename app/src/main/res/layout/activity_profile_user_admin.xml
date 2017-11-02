@@ -7,6 +7,58 @@
     tools:context="com.example.hecto.doorgo.Profile.ProfileUserAdmin">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imagenUser"
+                android:layout_width="match_parent"
+                android:layout_height="132dp"
+                app:srcCompat="@android:drawable/sym_def_app_icon" />
+
+            <TextView
+                android:id="@+id/nameUser"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:gravity="center"
+                android:text="TextView"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCambiarImagen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:text="Cambiar Imagen" />
+
+            <Button
+                android:id="@+id/btnCambiarNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:text="Cambiar Nombre" />
+        </LinearLayout>
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
