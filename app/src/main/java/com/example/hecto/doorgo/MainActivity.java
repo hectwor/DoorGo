@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         btnAdd = (Button)findViewById(R.id.btnAdd);
         btnLogin = (Button)findViewById(R.id.btnLogin);
         //btnEdit = (Button)findViewById(R.id.btnEdit);
-        
+
         edtUser = (EditText)findViewById(R.id.edtUsername);
         edtPass = (EditText)findViewById(R.id.edtPass);
 
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                                         .execute(Common.getAddressAPI());
                             }else{
                                 AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
-                                builder3.setTitle("Necesita Conexion a Internet")
+                                builder3.setTitle("Fallo en Conexión a Red")
                                         .setMessage("No se encontró señal de internet")
                                         .setNeutralButton("Aceptar",
                                                 new DialogInterface.OnClickListener() {
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }else{
                     AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
-                    builder3.setTitle("Necesita Conexion a Internet")
+                    builder3.setTitle("Fallo en Conexión a Red")
                             .setMessage("No se encontró señal de internet")
                             .setNeutralButton("Aceptar",
                                     new DialogInterface.OnClickListener() {

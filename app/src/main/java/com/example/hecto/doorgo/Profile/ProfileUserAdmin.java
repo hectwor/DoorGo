@@ -1,33 +1,20 @@
 package com.example.hecto.doorgo.Profile;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Base64;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,10 +27,7 @@ import com.example.hecto.doorgo.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.w3c.dom.Text;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +41,6 @@ public class ProfileUserAdmin extends AppCompatActivity {
     String nombreUsuario;
     Button btnChangeImage, btnCambiarNombre;
     String encoded;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
     private String m_Text = "";
     AlertDialog.Builder builder;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -67,13 +49,20 @@ public class ProfileUserAdmin extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-
+                    Perfil perfil= new Perfil();
+                    android.app.FragmentManager manager = getFragmentManager();
+                    manager.beginTransaction().replace(R.id.contentLayout, perfil, perfil.getTag()).commit();
                     return true;
                 case R.id.navigation_dashboard:
-
+                    UsersAdminFragment useradmi= new UsersAdminFragment();
+                    android.app.FragmentManager manager1 = getFragmentManager();
+                    manager1.beginTransaction().replace(R.id.contentLayout, useradmi, useradmi.getTag()).commit();
                     return true;
                 case R.id.navigation_notifications:
-
+                    Notificaciones notificaciones= new Notificaciones();
+                    android.app.FragmentManager manager2 = getFragmentManager();
+                    manager2.beginTransaction().replace(R.id.contentLayout,
+                            notificaciones, notificaciones.getTag()).commit();
                     return true;
             }
             return false;
@@ -92,10 +81,6 @@ public class ProfileUserAdmin extends AppCompatActivity {
         username = (TextView) findViewById(R.id.nameUser);
         nombreUsuario = (String) getIntent().getExtras().getString("usuario");
         img = (ImageView)this.findViewById(R.id.imagenUser);
-
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         btnCambiarNombre = (Button) findViewById(R.id.btnCambiarNombre);
         btnChangeImage = (Button) findViewById(R.id.btnCambiarImagen);
@@ -243,37 +228,4 @@ public class ProfileUserAdmin extends AppCompatActivity {
         }
     }
 
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position){
-                case 0:
-                    Perfil p1 = new Perfil();
-                    System.out.println("111111111111111111111111");
-                    return p1;
-                case 1:
-                    AdminUsuarios p2 = new AdminUsuarios();
-                    System.out.println("22222222222222222222222222");
-                    return p2;
-                case 2:
-                    Notificaciones p3 = new Notificaciones();
-                    System.out.println("3333333333333333333333333333");
-                    return p3;
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-    }
 }
