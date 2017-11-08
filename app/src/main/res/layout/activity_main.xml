@@ -77,21 +77,9 @@
             android:id="@+id/btnLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:text="Ingresar" />
-
-        <Button
-            android:id="@+id/btnDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Eliminar" />
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lstView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-    </ListView>
 </LinearLayout>
