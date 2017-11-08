@@ -1,6 +1,5 @@
 package com.example.hecto.doorgo;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +8,6 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,10 +23,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.hecto.doorgo.Profile.ProfileUserAdmin;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
 public class MainActivity extends AppCompatActivity {
 
     ListView lstView;
@@ -43,27 +37,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        lstView = (ListView)findViewById(R.id.lstView);
         btnAdd = (Button)findViewById(R.id.btnAdd);
         btnLogin = (Button)findViewById(R.id.btnLogin);
         //btnEdit = (Button)findViewById(R.id.btnEdit);
-        btnDelete = (Button)findViewById(R.id.btnDelete);
+
         edtUser = (EditText)findViewById(R.id.edtUsername);
         edtPass = (EditText)findViewById(R.id.edtPass);
 
-
-        //Levantar data cuando abre la app
-        new GetData().execute(Common.getAddressAPI());
-
-        lstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                userSelected = users.get(i);
-
-                edtUser.setText(userSelected.getUsername());
-                edtPass.setText(userSelected.getPass());
-            }
-        });
         //Evento de boton añadir
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,46 +65,66 @@ public class MainActivity extends AppCompatActivity {
                         if(encontroUsuario>0){
                             edtUser.setError("Usuario ya registrado");
                             edtUser.requestFocus();
-                        }else
-                            new PostData(edtUser.getText().toString(), edtPass.getText().toString())
-                                    .execute(Common.getAddressAPI());
+                        }else{
+                            if (isOnlineNet()){
+                                new PostData(edtUser.getText().toString(), edtPass.getText().toString())
+                                        .execute(Common.getAddressAPI());
+                            }else{
+                                AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
+                                builder3.setTitle("Fallo en Conexión a Red")
+                                        .setMessage("No se encontró señal de internet")
+                                        .setNeutralButton("Aceptar",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                AlertDialog alert = builder3.create();
+                                alert.show();
+                            }
+                        }
 
                     }
-
                 }
             }
         });
-        //Evento de boton editar
-        /*btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new PutData(edtUser.getText().toString()).execute(Common.getAddressSingle(userSelected));
-            }
-        });*/
 
-        //Evento de boton eliminar
+        /*//Evento de boton eliminar
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DeleteData(userSelected).execute(Common.getAddressSingle(userSelected));
             }
-        });
+        });*/
         //Evento de boton login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ("".equals(edtUser.getText().toString())){
-                    edtUser.setError("Usuario en blanco");
-                    edtUser.requestFocus();
+                if (isOnlineNet()){
+                    if ("".equals(edtUser.getText().toString())){
+                        edtUser.setError("Usuario en blanco");
+                        edtUser.requestFocus();
+                    }else{
+                        if ("".equals(edtPass.getText().toString())){
+                            edtPass.setError("Contraseña en blanco");
+                            edtPass.requestFocus();
+                        }else
+                            new LoginUser(edtUser.getText().toString(), edtPass.getText().toString())
+                                    .execute(Common.getAddressAPI());
+                    }
                 }else{
-                    if ("".equals(edtPass.getText().toString())){
-                        edtPass.setError("Contraseña en blanco");
-                        edtPass.requestFocus();
-                    }else
-                        new LoginUser(edtUser.getText().toString(), edtPass.getText().toString())
-                                .execute(Common.getAddressAPI());
+                    AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
+                    builder3.setTitle("Fallo en Conexión a Red")
+                            .setMessage("No se encontró señal de internet")
+                            .setNeutralButton("Aceptar",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder3.create();
+                    alert.show();
                 }
-
             }
         });
     }
@@ -159,10 +159,6 @@ public class MainActivity extends AppCompatActivity {
             Gson gson = new Gson();
             Type listType = new TypeToken<List<User>>(){}.getType();
             users=gson.fromJson(s,listType);
-
-            CustomAdapter adapter = new CustomAdapter(getApplicationContext(), users);
-
-            lstView.setAdapter(adapter);
             pd.dismiss();
         }
     }
@@ -219,42 +215,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //funcion para editar usuarios
-    class PutData extends AsyncTask<String, String, String>{
-        ProgressDialog pd = new ProgressDialog(MainActivity.this);
-
-        String userName;
-
-        public PutData(String userName) {
-            this.userName = userName;
-        }
-
-        @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-            pd.setTitle("Espere...");
-            pd.show();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String urlString = strings[0];
-
-            HTTPDataHandler hh = new HTTPDataHandler();
-            String json="{\"user\":\""+userName+"\"}";
-            hh.PutHTTPData(urlString,json);
-            return "";
-        }
-
-        protected void onPostExecute(String s){
-            super.onPostExecute(s);
-
-            //Refresh data
-            new GetData().execute(Common.getAddressAPI());
-            pd.dismiss();
-        }
-    }
-
     //funcion para eliminar usuarios
     class DeleteData extends AsyncTask<String, String, String>{
         ProgressDialog pd = new ProgressDialog(MainActivity.this);
@@ -285,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s){
             super.onPostExecute(s);
             //Refresh data
-            new GetData().execute(Common.getAddressAPI());
             pd.dismiss();
         }
     }
@@ -333,16 +292,6 @@ public class MainActivity extends AppCompatActivity {
             }
             if(encontroUsuario>0){
                     if (userLogeado.getPass().equals(edtPass.getText().toString())){
-                        /*AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
-                        builder3.setTitle("Usuario Logeado")
-                                .setNeutralButton("Aceptar",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.cancel();
-                                            }
-                                        });
-                        AlertDialog alert = builder3.create();
-                        alert.show();*/
                         saltoActivity();
 
                     }else {
@@ -361,6 +310,21 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ProfileUserAdmin.class);
         intent.putExtra("usuario", userLogeado.getUsername());
         startActivity(intent);
+    }
+    public Boolean isOnlineNet() {
+
+        try {
+            Process p = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.es");
+
+            int val           = p.waitFor();
+            boolean reachable = (val == 0);
+            return reachable;
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
     }
 }
 

@@ -9,28 +9,22 @@ public class User {
     private Id _id;
     private String user;
     private String pass;
+    private String imageProfile;
+
 
     public Id get_id() {
         return _id;
-    }
-
-    public void set_id(Id _id) {
-        this._id = _id;
     }
 
     public String getUsername() {
         return user;
     }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
-
     public String getPass() {
         return pass;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public String getImageProfile() {
+        return imageProfile;
     }
 }
