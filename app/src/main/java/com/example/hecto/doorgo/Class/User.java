@@ -27,4 +27,12 @@ public class User {
     public String getImageProfile() {
         return imageProfile;
     }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setImageProfile(String imageProfile) {
+        this.imageProfile = imageProfile;
+    }
 }
