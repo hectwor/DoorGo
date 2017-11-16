@@ -34,120 +34,55 @@ import java.util.List;
 
 public class ProfileUserAdmin extends AppCompatActivity {
 
-    private TextView mTextMessage;
     List<User> users = new ArrayList<>();
-    User usuarioLogeado;
-    TextView username;
-    String nombreUsuario;
-    Button btnChangeImage, btnCambiarNombre;
-    String encoded;
-    private String m_Text = "";
-    AlertDialog.Builder builder;
+    private User usuarioLogeado;
+    private String nombreUsuario;
+    protected String encoded;
+    private AlertDialog.Builder builder;
+    private EditText input;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile_user_admin);
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        input = new EditText(this);
+        builder = new AlertDialog.Builder(this);
+
+        new levantarInfoUsuario().execute(Common.getAddressAPI());
+        nombreUsuario = (String) getIntent().getExtras().getString("usuario");
+
+    }
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+            =   new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    Perfil perfil= new Perfil();
-                    android.app.FragmentManager manager = getFragmentManager();
-                    manager.beginTransaction().replace(R.id.contentLayout, perfil, perfil.getTag()).commit();
+                    levantarfragmentProfile();
                     return true;
                 case R.id.navigation_dashboard:
-                    UsersAdminFragment useradmi= new UsersAdminFragment();
-                    android.app.FragmentManager manager1 = getFragmentManager();
-                    manager1.beginTransaction().replace(R.id.contentLayout, useradmi, useradmi.getTag()).commit();
+                    levantarfragmentUserAdmin();
                     return true;
                 case R.id.navigation_notifications:
-                    Notificaciones notificaciones= new Notificaciones();
-                    android.app.FragmentManager manager2 = getFragmentManager();
-                    manager2.beginTransaction().replace(R.id.contentLayout,
-                            notificaciones, notificaciones.getTag()).commit();
+                    levantarfragmentNotifications();
                     return true;
             }
             return false;
         }
     };
-    private ImageView img;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_user_admin);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
-        new levantarInfoUsuario().execute(Common.getAddressAPI());
-        username = (TextView) findViewById(R.id.nameUser);
-        nombreUsuario = (String) getIntent().getExtras().getString("usuario");
-        img = (ImageView)this.findViewById(R.id.imagenUser);
-
-        btnCambiarNombre = (Button) findViewById(R.id.btnCambiarNombre);
-        btnChangeImage = (Button) findViewById(R.id.btnCambiarImagen);
-
-        btnChangeImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-                //Lanzamos la aplicacion de la camara con retorno (forResult)*/
-                startActivityForResult(cameraIntent, 1);
-            }
-        });
-
-
-        // Set up the input
-        final EditText input = new EditText(this);
-        builder = new AlertDialog.Builder(this);
-
-
-        btnCambiarNombre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                builder.setTitle("Ingrese Nuevo Nombre");
-                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-                builder.setView(input);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        m_Text = input.getText().toString();
-                        new PutData(m_Text).execute(Common.getAddressSingle(usuarioLogeado));
-                        username.setText(m_Text);
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
-            }
-        });
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //Comprovamos que la foto se a realizado
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            img.setImageBitmap(photo);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream .toByteArray();
-            encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-            new PutData(usuarioLogeado.getUsername()).execute(Common.getAddressSingle(usuarioLogeado));
-        }
-    }
     //funcion progreso de datos
     class levantarInfoUsuario extends AsyncTask<String, Void, String> {
-        ProgressDialog pd = new ProgressDialog(ProfileUserAdmin.this);
+        //ProgressDialog pd = new ProgressDialog(ProfileUserAdmin.this);
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             //Pre Proceso
-            pd.show();
+            //pd.show();
         }
 
         @Override
@@ -170,62 +105,32 @@ public class ProfileUserAdmin extends AppCompatActivity {
             Type listType = new TypeToken<List<User>>() {
             }.getType();
             users = gson.fromJson(s, listType);
-            int encontroUsuario = 0;
             for (int i = 0; i < users.size(); i++) {
-                if (users.get(i).getUsername().equals(nombreUsuario)) {
-                    encontroUsuario++;
+                if (users.get(i).getUsername().equals(nombreUsuario)){
                     usuarioLogeado = users.get(i);
+                    levantarfragmentProfile();
                 }
-            }
-            if (encontroUsuario > 0) {
-                username.setText(usuarioLogeado.getUsername());
-                System.out.println(usuarioLogeado.getImageProfile());
-                if (usuarioLogeado.getImageProfile()!=null){
-                    byte[] decodedString = Base64.decode(usuarioLogeado.getImageProfile(), Base64.DEFAULT);
 
-                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                    img.setImageBitmap(decodedByte);
-                }
             }
-            pd.dismiss();
+            //pd.dismiss();
         }
     }
 
-    //funcion para editar usuarios
-    class PutData extends AsyncTask<String, String, String> {
-        ProgressDialog pd = new ProgressDialog(ProfileUserAdmin.this);
-
-        String userName;
-
-        public PutData(String userName) {
-            this.userName = userName;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd.setTitle("Espere...");
-            pd.show();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String urlString = strings[0];
-
-            HTTPDataHandler hh = new HTTPDataHandler();
-            String json="{\"user\":\"" + userName + "\"," +
-                    "\"pass\":\"" + usuarioLogeado.getPass() + "\"," +
-                    "\"imageProfile\":\"" + encoded+"\"}";
-
-            // {\"user\":\"userName\",\"pass\":\"pass\",\"imageProfile\":\"photo\"}
-            hh.PutHTTPData(urlString, json);
-            return "";
-        }
-
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            pd.dismiss();
-        }
+    private void levantarfragmentProfile(){
+        Perfil perfil= new Perfil();
+        perfil.setObject(usuarioLogeado, builder, input);
+        android.app.FragmentManager manager = getFragmentManager();
+        manager.beginTransaction().replace(R.id.contentLayout, perfil, perfil.getTag()).commit();
     }
-
+    private void levantarfragmentUserAdmin(){
+        UsersAdminFragment useradmi= new UsersAdminFragment();
+        android.app.FragmentManager manager1 = getFragmentManager();
+        manager1.beginTransaction().replace(R.id.contentLayout, useradmi, useradmi.getTag()).commit();
+    }
+    private void levantarfragmentNotifications(){
+        Notificaciones notificaciones= new Notificaciones();
+        android.app.FragmentManager manager2 = getFragmentManager();
+        manager2.beginTransaction().replace(R.id.contentLayout,
+                notificaciones, notificaciones.getTag()).commit();
+    }
 }

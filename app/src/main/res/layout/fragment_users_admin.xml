@@ -6,23 +6,74 @@
     tools:context="com.example.hecto.doorgo.Profile.UsersAdminFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
+        android:gravity="center"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnAñadirUsuarios"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Añadir Usuarios" />
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnVerUsuarios"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ver usuarios" />
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="371dp"
+                android:stretchColumns="*">
+
+                <TableRow
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="User1" />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="User2" />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="User3" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="User4" />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="User5" />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="User6" />
+                </TableRow>
+            </TableLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="47dp"
+            android:gravity="center"
+            android:text="Para añadir o cambiar usuarios presionar las casillas"
+            android:textColor="@android:color/background_light"
+            android:textSize="15sp" />
+
     </LinearLayout>
+
 </FrameLayout>

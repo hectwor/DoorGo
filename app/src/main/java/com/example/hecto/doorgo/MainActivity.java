@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         edtPass.setError("Contraseña en blanco");
                         edtPass.requestFocus();
                     } else{
+                        new GetData().execute(Common.getAddressAPI());
                         int encontroUsuario=0;
                         for (int i=0;i<users.size();i++){
                             if (users.get(i).getUsername().equals(edtUser.getText().toString())){
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (isOnlineNet()){
                     if ("".equals(edtUser.getText().toString())){
                         edtUser.setError("Usuario en blanco");
@@ -108,9 +110,11 @@ public class MainActivity extends AppCompatActivity {
                         if ("".equals(edtPass.getText().toString())){
                             edtPass.setError("Contraseña en blanco");
                             edtPass.requestFocus();
-                        }else
+                        }else{
+                            new GetData().execute(Common.getAddressAPI());
                             new LoginUser(edtUser.getText().toString(), edtPass.getText().toString())
                                     .execute(Common.getAddressAPI());
+                        }
                     }
                 }else{
                     AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
@@ -209,8 +213,7 @@ public class MainActivity extends AppCompatActivity {
                             });
             AlertDialog alert = builder3.create();
             alert.show();
-            //Refresh data
-            new GetData().execute(Common.getAddressAPI());
+
             pd.dismiss();
         }
     }
