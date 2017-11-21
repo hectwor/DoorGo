@@ -1,45 +1,33 @@
-package com.example.hecto.doorgo.Profile;
+package com.example.hecto.doorgo.Controller;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
-import android.util.Base64;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.example.hecto.doorgo.Class.User;
-import com.example.hecto.doorgo.Common;
-import com.example.hecto.doorgo.HTTPDataHandler;
+import com.example.hecto.doorgo.Entity.User;
+import com.example.hecto.doorgo.Model.MongodbDAOFactoria;
+import com.example.hecto.doorgo.Model.MongodbClienteDAO;
 import com.example.hecto.doorgo.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ProfileUserAdmin extends AppCompatActivity {
 
-    List<User> users = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
     private User usuarioLogeado;
     private String nombreUsuario;
     protected String encoded;
     private AlertDialog.Builder builder;
-    private EditText input;
+    private AlertDialog.Builder build1, build2, build3, build4, build5, build6;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +35,15 @@ public class ProfileUserAdmin extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        input = new EditText(this);
         builder = new AlertDialog.Builder(this);
+        build1 = new AlertDialog.Builder(this);
+        build2 = new AlertDialog.Builder(this);
+        build3 = new AlertDialog.Builder(this);
+        build4 = new AlertDialog.Builder(this);
+        build5 = new AlertDialog.Builder(this);
+        build6 = new AlertDialog.Builder(this);
 
-        new levantarInfoUsuario().execute(Common.getAddressAPI());
+        new ProfileAdminDAO().execute(MongodbDAOFactoria.getAddressAPI());
         nombreUsuario = (String) getIntent().getExtras().getString("usuario");
 
     }
@@ -75,14 +67,10 @@ public class ProfileUserAdmin extends AppCompatActivity {
     };
 
     //funcion progreso de datos
-    class levantarInfoUsuario extends AsyncTask<String, Void, String> {
-        //ProgressDialog pd = new ProgressDialog(ProfileUserAdmin.this);
-
+    class ProfileAdminDAO extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //Pre Proceso
-            //pd.show();
         }
 
         @Override
@@ -91,7 +79,7 @@ public class ProfileUserAdmin extends AppCompatActivity {
             String stream = null;
             String urlString = params[0];
 
-            HTTPDataHandler http = new HTTPDataHandler();
+            MongodbClienteDAO http = new MongodbClienteDAO();
             stream = http.GetHTTPData(urlString);
             return stream;
         }
@@ -99,8 +87,6 @@ public class ProfileUserAdmin extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //Acabar proceso
-
             Gson gson = new Gson();
             Type listType = new TypeToken<List<User>>() {
             }.getType();
@@ -110,27 +96,26 @@ public class ProfileUserAdmin extends AppCompatActivity {
                     usuarioLogeado = users.get(i);
                     levantarfragmentProfile();
                 }
-
             }
-            //pd.dismiss();
         }
     }
 
     private void levantarfragmentProfile(){
-        Perfil perfil= new Perfil();
-        perfil.setObject(usuarioLogeado, builder, input);
+        PerfilFragment perfilFragment = new PerfilFragment();
+        perfilFragment.setObject(usuarioLogeado, builder);
         android.app.FragmentManager manager = getFragmentManager();
-        manager.beginTransaction().replace(R.id.contentLayout, perfil, perfil.getTag()).commit();
+        manager.beginTransaction().replace(R.id.contentLayout, perfilFragment, perfilFragment.getTag()).commit();
     }
     private void levantarfragmentUserAdmin(){
         UsersAdminFragment useradmi= new UsersAdminFragment();
+        useradmi.setObject(usuarioLogeado,build1, build2, build3, build4, build5, build6);
         android.app.FragmentManager manager1 = getFragmentManager();
         manager1.beginTransaction().replace(R.id.contentLayout, useradmi, useradmi.getTag()).commit();
     }
     private void levantarfragmentNotifications(){
-        Notificaciones notificaciones= new Notificaciones();
+        NotificacionesFragment notificacionesFragment = new NotificacionesFragment();
         android.app.FragmentManager manager2 = getFragmentManager();
         manager2.beginTransaction().replace(R.id.contentLayout,
-                notificaciones, notificaciones.getTag()).commit();
+                notificacionesFragment, notificacionesFragment.getTag()).commit();
     }
 }

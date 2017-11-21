@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hecto.doorgo.Profile.Perfil">
+    tools:context="com.example.hecto.doorgo.Controller.PerfilFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -22,14 +22,13 @@
                 android:id="@+id/imagenUser"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@drawable/user" />
 
             <TextView
                 android:id="@+id/nameUser"
                 android:layout_width="match_parent"
                 android:layout_height="47dp"
                 android:gravity="center"
-                android:text="TextView"
                 android:textColor="@android:color/background_light"
                 android:textSize="26sp" />
         </LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.hecto.doorgo.Profile;
+package com.example.hecto.doorgo.Controller;
 
 
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import com.example.hecto.doorgo.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Notificaciones extends Fragment {
+public class NotificacionesFragment extends Fragment {
 
 
-    public Notificaciones() {
+    public NotificacionesFragment() {
         // Required empty public constructor
     }
 
