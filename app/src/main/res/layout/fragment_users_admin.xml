@@ -1,9 +1,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.hecto.doorgo.Profile.UsersAdminFragment">
+    android:layout_gravity="center"
+    android:foregroundGravity="center"
+    app:layout_anchorGravity="center"
+    tools:context="com.example.hecto.doorgo.Controller.UsersAdminFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -20,47 +23,66 @@
 
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="371dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
+                android:gravity="center"
                 android:stretchColumns="*">
 
                 <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center">
 
                     <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:text="User1" />
+                        android:id="@+id/btnUser1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@android:drawable/ic_input_add"
+                        android:gravity="bottom|center" />
 
                     <Button
-                        android:layout_width="fill_parent"
+                        android:id="@+id/btnUser2"
+                        android:layout_width="match_parent"
                         android:layout_height="fill_parent"
-                        android:text="User2" />
+                        android:background="@android:drawable/ic_input_add"
+                        android:gravity="bottom|center" />
 
                     <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:text="User3" />
+                        android:id="@+id/btnUser3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:drawable/ic_input_add"
+                        android:gravity="bottom|center" />
                 </TableRow>
 
                 <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center">
 
                     <Button
+                        android:id="@+id/btnUser4"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:text="User4" />
+                        android:background="@android:drawable/ic_input_add"
+                        android:gravity="bottom|center"/>
 
                     <Button
+                        android:id="@+id/btnUser5"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:text="User5" />
+                        android:background="@android:drawable/ic_input_add"
+                        android:gravity="bottom|center"/>
 
                     <Button
+                        android:id="@+id/btnUser6"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:text="User6" />
+                        android:background="@android:drawable/ic_input_add"
+                        android:gravity="bottom|center"/>
                 </TableRow>
             </TableLayout>
 

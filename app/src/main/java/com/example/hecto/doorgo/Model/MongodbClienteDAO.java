@@ -1,4 +1,4 @@
-package com.example.hecto.doorgo;
+package com.example.hecto.doorgo.Model;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -17,10 +17,10 @@ import java.nio.charset.StandardCharsets;
  * Created by hecto on 26/09/2017.
  */
 
-public class HTTPDataHandler {
+public class MongodbClienteDAO {
     static String stream=null;
 
-    public HTTPDataHandler(){
+    public MongodbClienteDAO(){
     }
 
     public String GetHTTPData(String urlString){

@@ -1,4 +1,4 @@
-package com.example.hecto.doorgo.Class;
+package com.example.hecto.doorgo.Entity;
 
 import com.google.gson.annotations.SerializedName;
 

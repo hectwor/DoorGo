@@ -1,8 +1,7 @@
-package com.example.hecto.doorgo.Profile;
+package com.example.hecto.doorgo.Controller;
 
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -21,21 +19,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.hecto.doorgo.Class.User;
-import com.example.hecto.doorgo.Common;
-import com.example.hecto.doorgo.HTTPDataHandler;
+import com.example.hecto.doorgo.Entity.User;
+import com.example.hecto.doorgo.Model.MongodbDAOFactoria;
+import com.example.hecto.doorgo.Model.MongodbClienteDAO;
 import com.example.hecto.doorgo.R;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Perfil extends Fragment {
+public class PerfilFragment extends Fragment {
 
     private Button btnChangeImage, btnCambiarNombre;
     private TextView username;
@@ -44,14 +39,13 @@ public class Perfil extends Fragment {
     private String m_Text = "";
     private User usuarioLogeado;
     private String encoded;
-    private EditText input;
-    public Perfil() {
+    private EditText inputnewname;
+    public PerfilFragment() {
         // Required empty public constructor
     }
-    public void setObject(User user, AlertDialog.Builder build, EditText in){
+    public void setObject(User user, AlertDialog.Builder build){
         usuarioLogeado = user;
         builder=build;
-        input=in;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,8 +62,6 @@ public class Perfil extends Fragment {
 
         btnCambiarNombre = (Button) view.findViewById(R.id.btnCambiarNombre);
         btnChangeImage = (Button) view.findViewById(R.id.btnCambiarImagen);
-        // Set up the input
-
 
         username.setText(usuarioLogeado.getUsername());
         if (usuarioLogeado.getImageProfile()!=null){
@@ -82,15 +74,16 @@ public class Perfil extends Fragment {
         btnCambiarNombre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                inputnewname = new EditText(getActivity());
+                inputnewname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
                 builder.setTitle("Ingrese Nuevo Nombre");
-                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-                builder.setView(input);
+                builder.setView(inputnewname);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        m_Text = input.getText().toString();
+                        m_Text = inputnewname.getText().toString();
                         usuarioLogeado.setUser(m_Text);
-                        new PutData(usuarioLogeado.getUsername()).execute(Common.getAddressSingle(usuarioLogeado));
+                        new PerfilDAO(usuarioLogeado.getUsername()).execute(MongodbDAOFactoria.getAddressSingle(usuarioLogeado));
                         username.setText(m_Text);
                     }
                 });
@@ -124,16 +117,15 @@ public class Perfil extends Fragment {
             encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
             usuarioLogeado.setImageProfile(encoded);
-            new PutData(usuarioLogeado.getUsername()).execute(Common.getAddressSingle(usuarioLogeado));
+            new PerfilDAO(usuarioLogeado.getUsername()).execute(MongodbDAOFactoria.getAddressSingle(usuarioLogeado));
         }
     }
 
     //funcion para editar usuarios
-    class PutData extends AsyncTask<String, String, String> {
-
+    class PerfilDAO extends AsyncTask<String, String, String> {
         String userName;
 
-        public PutData(String userName) {
+        public PerfilDAO(String userName) {
             this.userName = userName;
         }
 
@@ -146,7 +138,7 @@ public class Perfil extends Fragment {
         protected String doInBackground(String... strings) {
             String urlString = strings[0];
 
-            HTTPDataHandler hh = new HTTPDataHandler();
+            MongodbClienteDAO hh = new MongodbClienteDAO();
             String json="{\"user\":\"" + usuarioLogeado.getUsername() + "\"," +
                     "\"pass\":\"" + usuarioLogeado.getPass() + "\"," +
                     "\"imageProfile\":\"" + usuarioLogeado.getImageProfile()+"\"}";
@@ -155,7 +147,6 @@ public class Perfil extends Fragment {
             hh.PutHTTPData(urlString, json);
             return "";
         }
-
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
         }

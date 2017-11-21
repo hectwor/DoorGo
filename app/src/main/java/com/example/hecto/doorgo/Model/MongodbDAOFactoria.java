@@ -1,12 +1,12 @@
-package com.example.hecto.doorgo;
+package com.example.hecto.doorgo.Model;
 
-import com.example.hecto.doorgo.Class.User;
+import com.example.hecto.doorgo.Entity.User;
 
 /**
  * Created by hecto on 26/09/2017.
  */
 
-public class Common {
+public class MongodbDAOFactoria {
     private static String DB_NAME = "mydb";
     private static String COLLECTION_NAME = "user";
     public static String API_KEY="iJi2WSW1jBLsPEeimRjEOBubrNKu4Tyl";
