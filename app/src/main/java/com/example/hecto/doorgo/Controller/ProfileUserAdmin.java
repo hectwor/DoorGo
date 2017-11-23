@@ -25,7 +25,7 @@ public class ProfileUserAdmin extends AppCompatActivity {
     private List<User> users = new ArrayList<>();
     private User usuarioLogeado;
     private String nombreUsuario;
-    protected String encoded;
+    private String encoded;
     private AlertDialog.Builder builder;
     private AlertDialog.Builder build1, build2, build3, build4, build5, build6;
     @Override
