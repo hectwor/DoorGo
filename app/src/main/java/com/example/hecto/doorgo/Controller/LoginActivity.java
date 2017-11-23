@@ -26,13 +26,13 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ListView lstView;
-    Button btnAdd, btnEdit, btnDelete, btnLogin;
-    EditText edtUser, edtPass;
-    User userSelected=null;
-    List<User> users = new ArrayList<User>();
-    final Context context = this;
-    User userLogeado=null;
+    private ListView lstView;
+    private Button btnAdd, btnEdit, btnDelete, btnLogin;
+    private EditText edtUser, edtPass;
+    private User userSelected=null;
+    private List<User> users = new ArrayList<User>();
+    private final Context context = this;
+    private User userLogeado=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
